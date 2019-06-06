@@ -3,7 +3,6 @@ package org.wltea.analyzer.lucene;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.Tokenizer;
 
-import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 

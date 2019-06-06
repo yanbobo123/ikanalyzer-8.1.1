@@ -12,10 +12,10 @@ import java.io.StringReader;
 
 public class IKPinyinAnalyzerDemo {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         //构建IK分词器，使用smart分词模式
-        Analyzer analyzer = new IKPinyinAnalyzer("","none",  false);
-        
+        Analyzer analyzer = new IKPinyinAnalyzer("", "none", false);
+
         //获取Lucene的TokenStream对象
         TokenStream ts = null;
         try {
@@ -26,12 +26,12 @@ public class IKPinyinAnalyzerDemo {
             CharTermAttribute term = ts.addAttribute(CharTermAttribute.class);
             //获取词元文本属性
             TypeAttribute type = ts.addAttribute(TypeAttribute.class);
-            
+
             //重置TokenStream（重置StringReader）
-            ts.reset(); 
+            ts.reset();
             //迭代获取分词结果
             while (ts.incrementToken()) {
-              System.out.println(offset.startOffset() + " - " + offset.endOffset() + " : " + term.toString() + " | " + type.type());
+                System.out.println(offset.startOffset() + " - " + offset.endOffset() + " : " + term.toString() + " | " + type.type());
             }
             //关闭TokenStream（关闭StringReader）
             ts.end();   // Perform end-of-stream operations, e.g. set the final offset.
@@ -40,15 +40,15 @@ public class IKPinyinAnalyzerDemo {
             e.printStackTrace();
         } finally {
             //释放TokenStream的所有资源
-            if(ts != null){
-              try {
-                ts.close();
-              } catch (IOException e) {
-                e.printStackTrace();
-              }
+            if (ts != null) {
+                try {
+                    ts.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
-        
+
     }
 
 

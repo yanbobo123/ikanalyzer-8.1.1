@@ -23,16 +23,14 @@
  */
 package org.wltea.analyzer.lucene;
 
-import java.io.IOException;
-import java.io.Reader;
-
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
-
 import org.wltea.analyzer.core.IKSegmenter;
 import org.wltea.analyzer.core.Lexeme;
+
+import java.io.IOException;
 
 /**
  * IK分词器 Lucene Tokenizer适配器类
@@ -54,6 +52,7 @@ public final class IKTokenizer extends Tokenizer {
 
     /**
      * Lucene 4.0 Tokenizer适配器类构造函数
+     *
      * @param useSmart
      */
     public IKTokenizer(boolean useSmart) {

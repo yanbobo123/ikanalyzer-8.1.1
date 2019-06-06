@@ -23,7 +23,7 @@ public class IKSynonymDemo {
     public static void main(String[] args) throws IOException, ParseException {
         Analyzer analyzer = new IKSynonymAnalyzer(true, false);
         String str = "刘一反";
-       // displayAllTokenInfo(analyzer, str);
+        // displayAllTokenInfo(analyzer, str);
         StringReader reader = new StringReader(str);
         TokenStream toStream = analyzer.tokenStream(str, reader);
         toStream.reset();// 清空流

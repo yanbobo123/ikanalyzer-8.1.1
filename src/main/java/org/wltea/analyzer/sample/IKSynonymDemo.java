@@ -23,7 +23,18 @@ public class IKSynonymDemo {
     public static void main(String[] args) throws IOException, ParseException {
         Analyzer analyzer = new IKSynonymAnalyzer(true, false);
         String str = "刘一反";
-        displayAllTokenInfo(analyzer, str);
+       // displayAllTokenInfo(analyzer, str);
+        StringReader reader = new StringReader(str);
+        TokenStream toStream = analyzer.tokenStream(str, reader);
+        toStream.reset();// 清空流
+        PositionIncrementAttribute pia = toStream.getAttribute(PositionIncrementAttribute.class);
+        OffsetAttribute oa = toStream.getAttribute(OffsetAttribute.class);
+        CharTermAttribute cta = toStream.getAttribute(CharTermAttribute.class);
+        TypeAttribute ta = toStream.getAttribute(TypeAttribute.class);
+        while (toStream.incrementToken()) {
+            System.out.print(pia.getPositionIncrement() + ":");
+            System.out.print(cta + "[" + oa.startOffset() + "-" + oa.endOffset() + "]-->" + ta.type() + "\n");
+        }
     }
 
     /**

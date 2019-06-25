@@ -43,7 +43,7 @@ public class IKSynonymDemo {
      * @param analyzer
      * @throws IOException
      */
-    public static void displayAllTokenInfo(Analyzer analyzer, String str) throws IOException {
+    /*public static void displayAllTokenInfo(Analyzer analyzer, String str) throws IOException {
         StringReader reader = new StringReader(str);
         TokenStream toStream = analyzer.tokenStream(str, reader);
         toStream.reset();// 清空流
@@ -55,6 +55,6 @@ public class IKSynonymDemo {
             System.out.print(pia.getPositionIncrement() + ":");
             System.out.print(cta + "[" + oa.startOffset() + "-" + oa.endOffset() + "]-->" + ta.type() + "\n");
         }
-    }
+    }*/
 
 }

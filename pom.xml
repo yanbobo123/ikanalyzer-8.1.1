@@ -13,6 +13,26 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>org/wltea/analyzer/dic/*.dic</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!--打包时排除哪些内容-->
+                <excludes>
+                    <exclude>*.dic</exclude>
+                    <exclude>*.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+    </build>
+
     <dependencies>
 
         <dependency>

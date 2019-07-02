@@ -60,6 +60,9 @@ public class LuceneIndexAndSearchAndSortDemo {
         try {
             // 建立内存索引对象
             directory = new RAMDirectory();
+            // 索引存放目录
+            // 存放到文件系统中
+            //directory = FSDirectory.open((new File("f:/test/indextest")).toPath());
 
             // 配置IndexWriterConfig
             IndexWriterConfig iwConfig = new IndexWriterConfig(analyzer);
@@ -70,7 +73,8 @@ public class LuceneIndexAndSearchAndSortDemo {
             Field field = null;
             for (QA qa : qas) {
                 Document doc = new Document();
-                doc.add(new StoredField("id", qa.getId()));//存储普通字段
+                //doc.add(new StoredField("id", qa.getId()));//存储普通字段
+                doc.add(new StringField("id", qa.getId() + "", Field.Store.YES));//存储普通字段
                 doc.add(new TextField(fieldName, qa.getContent(), Field.Store.YES));//存储分词并“DOCS_AND_FREQS_AND_POSITIONS”索引字段
 
                 doc.add(new StoredField("sort", qa.getNum()));//存储普通字段
@@ -114,26 +118,36 @@ public class LuceneIndexAndSearchAndSortDemo {
                 doc.add(field);*/
                 iwriter.addDocument(doc);
             }
-
+            //更新document
+            /*Document doc = new Document();
+            doc.add(new StringField("id", 1 + "", Field.Store.YES));//存储普通字段
+            doc.add(new TextField(fieldName, "你是谁", Field.Store.YES));//存储分词并“DOCS_AND_FREQS_AND_POSITIONS”索引字段
+            doc.add(new StoredField("sort", 5));//存储普通字段
+            doc.add(new NumericDocValuesField("sort", 5));
+            long id = iwriter.updateDocument(new Term("id", "1"), doc);*/
+            //删除document
+            //long id = iwriter.deleteDocuments(new Term("id", 1 + ""));
+            iwriter.forceMergeDeletes();
             // 刷新
             iwriter.flush();
             // 提交
             iwriter.commit();
-            iwriter.close();
+
 
             // 搜索过程**********************************
             // 实例化搜索器
             ireader = DirectoryReader.open(directory);
             isearcher = new IndexSearcher(ireader);
 
-            String keyword = "怎么办";
+
+            String keyword = "是谁";
             // 使用QueryParser查询分析器构造Query对象
             QueryParser qp = new QueryParser(fieldName, analyzer);
-            qp.setDefaultOperator(QueryParser.AND_OPERATOR);
+            //qp.setDefaultOperator(QueryParser.AND_OPERATOR);//默认是或的关系
             Query query = qp.parse(keyword);
             System.out.println("Query = " + query);
             int start = 0;
-            int pageSize = 10;
+            int pageSize = 30;
             //自定义排序
             /*Sort sort = new Sort(new SortField("sort",SortField.Type.INT,true));
             TopFieldCollector results= TopFieldCollector.create(sort,start+pageSize,Integer.MAX_VALUE);*/
@@ -146,7 +160,6 @@ public class LuceneIndexAndSearchAndSortDemo {
             isearcher.search(query, results);//执行搜索
             TopDocs topDocs = results.topDocs(start, start + pageSize);//开始的地方和取得的条数  可以用来分页
             System.out.println("命中：" + topDocs.totalHits);
-
             ScoreDoc[] scoreDocs = topDocs.scoreDocs;
             // 高亮------------------------------
             Formatter htmlFormatter = null;
@@ -169,7 +182,7 @@ public class LuceneIndexAndSearchAndSortDemo {
                 Document targetDoc = isearcher.doc(scoreDocs[i].doc);
                 String bestFragment = highlighter.getBestFragment(analyzer, fieldName, targetDoc.get(fieldName));
                 targetDoc.removeFields(fieldName);
-                targetDoc.add(new TextField(fieldName, bestFragment, Field.Store.NO));
+                targetDoc.add(new TextField(fieldName, bestFragment, Field.Store.YES));
                 System.out.println("内容：" + targetDoc.toString() + "," + scoreDocs[i].toString());
                 //System.out.println("内容：" + targetDoc.get("id") + ":" + targetDoc.get(fieldName)+ ":" + targetDoc.get("sort")+"," + scoreDocs[i].toString());
             }
@@ -184,6 +197,13 @@ public class LuceneIndexAndSearchAndSortDemo {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            if (iwriter != null) {
+                try {
+                    iwriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             if (ireader != null) {
                 try {
                     ireader.close();
